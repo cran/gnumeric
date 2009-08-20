@@ -84,12 +84,20 @@ read.gnumeric.sheet <-
     " fd://1 ", sep='');
 
 
+  if ( .Platform$OS.type == "unix" ){
+    ## the 'grep ,' filter is a temporary workaround for .ods to ignore
+    ## diagnostic messages (may be removed in 2010 as new version of
+    ## libgsf comes out)
+    cmd = paste( cmd, " | grep , "  ); 
+  }
   
   if ( ! quiet ){
     cat(cmd,"\n")
   } else {
     if ( .Platform$OS.type == "unix" ){
-      cmd = paste( cmd, " 2> /dev/null" ); ## unix
+      ## the 'grep ,' filter is a temporary workaround for ods
+      ## to ignore diagnostic messages (may be removed in 2010)
+      cmd = paste( cmd, " 2> /dev/null " ); ## unix
     } else {
       ## ( .Platform$OS.type == "windows" )
       ## ??? 2>NIL:  ??? or similar? 

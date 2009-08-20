@@ -1,7 +1,7 @@
 \name{read.gnumeric.sheet}
 
 \title{Read data from a gnumeric (or MS Excel, Openoffice Calc, Xbase,
-Quatro Pro, Paradox, HTML, ...) spreadsheet or database file using
+Quatro Pro, Paradox, HTML, etc) spreadsheet or database file using
 ssconvert from the gnumeric distribution}
 
 \alias{read.gnumeric.sheet}
@@ -11,10 +11,16 @@ ssconvert from the gnumeric distribution}
   Read data from a sheet of a gnumeric (or other common spreadsheet or
   database) file to a data.frame.
   
-  The external program (\code{ssconvert} from the gnumeric distribution)
-  used to convert the input to CSV can read several other file formats
-  (see Details below).
+  Requires an external program, \samp{ssconvert} (normally installed
+  with gnumeric (\url{http://projects.gnome.org/gnumeric/}) in \samp{PATH}.
   
+  Calls \samp{ssconvert} to convert the input to CSV.
+  \samp{ssconvert} can read several file formats
+  (see Details below).
+
+  Note: During conversion to CSV \samp{ssconvert} also evaluates formulas
+  (e.g. \samp{=sum(A1:A3)}) in cells, and emits the result instead of
+  the formula.
 }
 \usage{
   df<-read.gnumeric.sheet(file,
@@ -38,7 +44,7 @@ ssconvert from the gnumeric distribution}
     gnumeric) to read from.
 
     This may also be an URL, i.e. like\cr
-    \code{http://example.com/path/file.gnumeric}
+    \code{'http://example.com/path/file.gnumeric'}
   
   }
   
@@ -59,7 +65,7 @@ ssconvert from the gnumeric distribution}
   \item{bottom.right}{Bottom right corner of requested gnumeric sheet
     range.\cr
     The default for \code{read.gnumeric.sheet} is \code{'IV65536'}: this
-    causes a lot of unused lines to be printed by \code{ssconvert} then
+    causes a lot of unused lines to be printed by \samp{ssconvert} then
     parsed by \code{read.csv}, thus you might want to override it to
     speed up reading.
   }
@@ -67,9 +73,9 @@ ssconvert from the gnumeric distribution}
   \item{drop.empty.rows}{One of
     \code{c('none','top','bottom','both','all')}.
 
-    \code{'all'}  Drops all empty lines from the requested range, even
+    \code{'all'}  drops all empty lines from the requested range, even
     those that are between two non-empty rows.
-    \code{'both'} Drops empty lines below the last non-empty row and
+    \code{'both'} drops empty lines below the last non-empty row and
     above the first non-empty.
     \code{'top'}, \code{'bottom'} and \code{'none'} as you would expect.
   }
@@ -80,10 +86,10 @@ ssconvert from the gnumeric distribution}
     \code{drop.empty.rows}, but for columns.
   }
 
-  \item{colnames.as.sheet}{Rename columns to \code{'A', 'B', 'C'} to
+  \item{colnames.as.sheet}{Rename columns to \code{'A', 'B', 'C', ...} to
     have names corresponding to gnumeric column names.}
 
-  \item{rownames.as.sheet}{Rename rows to \code{'1', '2', '3'} to have
+  \item{rownames.as.sheet}{Rename rows to \code{'1', '2', '3', ...} to have
     names corresponding to gnumeric row indices. Note: this means
     \code{df['1',]}, not \code{df[1,]} in the result (rownames are
     strings, not integers). Note: when deciding row names only
@@ -93,7 +99,7 @@ ssconvert from the gnumeric distribution}
   
   \item{quiet}{When TRUE, do not print command executed, and (on unix
     platforms) also redirect stderr of the external program
-    \code{ssconvert} to /dev/null}
+    \samp{ssconvert} to /dev/null}
   
   \item{...}{Extra arguments, passed to \code{\link{read.csv}}}
 }
@@ -105,7 +111,7 @@ ssconvert from the gnumeric distribution}
   arguments more suited for reading an exact cell range of a sheet.
   
   \code{\link[gdata]{read.xls}}  for reading Microsoft Excel files (possibly
-  from a \code{http://} URL)
+  from a \samp{http://} URL)
 
   \code{\link{read.DIF}} for reading Data Interchange Format (DIF)
   files.
@@ -115,10 +121,10 @@ ssconvert from the gnumeric distribution}
 
 \details{
 
-  Data from the gnumeric file is dumped as .csv using the \code{ssconvert}
+  Data from the gnumeric file is dumped as .csv using the \samp{ssconvert}
   program provided with gnumeric.
 
-  \code{ssconvert} supports several input formats, thus the input file
+  \samp{ssconvert} supports several input formats, thus the input file
   does not have to be a gnumeric file. The formats supported may be
   listed with
   \preformatted{
@@ -162,16 +168,19 @@ Gnumeric_stf:stf_assistant   | Text import (configurable)
     Format \tab Source \tab Status\cr
   .gnumeric  \tab gnumeric \tab works\cr
   .xls  \tab gnumeric \tab works\cr
-  .html \tab gnumeric  \code{[Save as / HTML 4.0]}  \tab works\cr
-  .html \tab Openoffice Calc \code{[Save as/HTML Document]} \tab works\cr
-  .ods \tab  Openoffice Calc \tab does not work.
+  .html \tab gnumeric  \samp{[Save as / HTML 4.0]}  \tab works\cr
+  .html \tab Openoffice Calc \samp{[Save as/HTML Document]} \tab works\cr
+  .ods \tab  Openoffice Calc \tab might work[1].
     }
   
-
+    [1] during .ods import ssconvert emits some messages on stdout
+    (corrupts output). Worked around on unix with \samp{| grep ,}
+    on the output. (The problem has been corrected in libgsf
+    on 2009-08-20, thus the workaround is expected to be removable
+    by 2010)
   
-  Note: one could also write several file formats by feeding CSV to
-  ssconvert (but that is not implemented here)
-  
+%  Note: one could also write several file formats by feeding CSV to
+%  ssconvert (but that is not implemented here)
 }
 
 \examples{
