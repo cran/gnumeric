@@ -33,6 +33,8 @@ ssconvert from the gnumeric distribution}
                           colnames.as.sheet=FALSE,
                           rownames.as.sheet=colnames.as.sheet,
                           quiet=TRUE,
+                          LANG='C',
+                          import.encoding=NA,
                           ...
                          )
 
@@ -68,6 +70,9 @@ ssconvert from the gnumeric distribution}
     causes a lot of unused lines to be printed by \samp{ssconvert} then
     parsed by \code{read.csv}, thus you might want to override it to
     speed up reading.
+
+    Use \code{\link{read.gnumeric.sheet.info}} to read actual
+    bottom.right cell name from a gnumeric file (but not other formats).
   }
 
   \item{drop.empty.rows}{One of
@@ -101,6 +106,16 @@ ssconvert from the gnumeric distribution}
     platforms) also redirect stderr of the external program
     \samp{ssconvert} to /dev/null}
   
+  \item{LANG}{ Under unix, passed to \code{ssconvert} in the environment
+    variable 'LANG'. The default value (\code{'C'}) is intended to avoid
+    using decimal comma in the emitted CSV file. }
+
+  \item{import.encoding}{If not NA, passed to \code{ssconvert} as its
+    \code{ --import-encoding } parameter.
+    % One might also need to pass encoding='XXX' in ... to read.csv if
+    % encoding issues arise.
+  }
+  
   \item{...}{Extra arguments, passed to \code{\link{read.csv}}}
 }
 
@@ -110,8 +125,16 @@ ssconvert from the gnumeric distribution}
   \code{\link{read.gnumeric.range}} for a variant with default
   arguments more suited for reading an exact cell range of a sheet.
   
-  \code{\link[gdata]{read.xls}}  for reading Microsoft Excel files (possibly
-  from a \samp{http://} URL)
+
+  \code{\link{read.gnumeric.sheet.info}} to read actual
+  bottom.right cell name from a gnumeric file (but not other formats).
+  
+  \code{\link{read.gnumeric.sheets}} to read all sheets
+  from a gnumeric file (but not other formats).
+  
+  
+  \code{\link[gdata]{read.xls}} for reading Microsoft Excel files
+  (possibly from a \samp{http://} URL)
 
   \code{\link{read.DIF}} for reading Data Interchange Format (DIF)
   files.
@@ -161,8 +184,8 @@ Gnumeric_stf:stf_csvtab      | Comma or tab separated
 Gnumeric_stf:stf_assistant   | Text import (configurable)
   }
 
-  But the actual list may be system dependent and may also depend on
-  what import plugins are installed for gnumeric.
+  But the actual list may depend on
+  which import plugins are installed for gnumeric.
   
   \tabular{lll}{
     Format \tab Source \tab Status\cr
@@ -170,7 +193,8 @@ Gnumeric_stf:stf_assistant   | Text import (configurable)
   .xls  \tab gnumeric \tab works\cr
   .html \tab gnumeric  \samp{[Save as / HTML 4.0]}  \tab works\cr
   .html \tab Openoffice Calc \samp{[Save as/HTML Document]} \tab works\cr
-  .ods \tab  Openoffice Calc \tab might work[1].
+  .ods \tab  Openoffice Calc \tab might work[1]\cr
+  Other formats \tab \tab not tested
     }
   
     [1] during .ods import ssconvert emits some messages on stdout
@@ -186,9 +210,9 @@ Gnumeric_stf:stf_assistant   | Text import (configurable)
 \examples{
 ## Read all data from 'Sheet1'
 \dontrun{
-df <- read.gnumeric.sheet( file= "file.gnumeric" );
+df <- read.gnumeric.sheet( file="file.gnumeric" );
 
-df <- read.gnumeric.sheet( file= "file.gnumeric",
+df <- read.gnumeric.sheet( file="file.gnumeric",
                            sheet.name='Sheet1' );
 
 

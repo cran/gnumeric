@@ -1,0 +1,10 @@
+
+	(version 0.5-3)
+	
+	(Tue Sep 1 11:23:35 2009) under unix, use 'LANG=C ssconvert' to
+	avoid decimal comma instead of decimal dot in ssonvert output
+	under e.g. hungarian locale
+
+	(Thu Sep 17 00:20:17 2009) add gnumeric.xml.read.sheet.names,
+	gnumeric.xml.read.sheet.info, gnumeric.xml.read.sheets. Now depends on
+	package XML

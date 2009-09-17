@@ -1,3 +1,5 @@
+### install.packages("XML", repos = "http://www.omegahat.org/R")
+library(XML);
 
 ## sheet.name defaults to 'Sheet1' instead of NA, which would get the
 ## 'current sheet' from the .gnumeric file.
@@ -48,6 +50,8 @@ read.gnumeric.sheet <-
            quiet=TRUE,                ## Redirect stderr of ssconvert
                                       ## to /dev/null and do not print
                                       ## command executed
+           LANG='C',                  ## Environment for ssconvert under unix
+           import.encoding=NA,        ## --import-encoding for ssconvert
            ... ## passed to read.csv
            )
 {
@@ -74,21 +78,29 @@ read.gnumeric.sheet <-
     stop("Required program '",ssconvert,"' not found." );
   }
 
+  IMPORT.ENCODING='';
+  if ( ! is.na( import.encoding ) ){
+    IMPORT.ENCODING = paste(" --import-encoding='", import.encoding, "' ", sep='' );
+  }
+  
   ## --export-range needed because I know of no other way to select the
   ## sheet. This in turn forces to also provide top.left and
   ## bottom.right, even when we just want 'all the sheet'
   cmd <- paste(ssconvert,
-    " --export-type=Gnumeric_stf:stf_csv ",
-    " --export-range='", SHEET , top.left ,":", bottom.right,"' ",
-    "'", file, "'",
-    " fd://1 ", sep='');
+               " --export-type=Gnumeric_stf:stf_csv ",
+               " --export-range='", SHEET , top.left ,":", bottom.right,"' ",
+               IMPORT.ENCODING,
+               " '", file, "'",
+               " fd://1 ", sep='');
 
 
   if ( .Platform$OS.type == "unix" ){
     ## the 'grep ,' filter is a temporary workaround for .ods to ignore
     ## diagnostic messages (may be removed in 2010 as new version of
     ## libgsf comes out)
-    cmd = paste( cmd, " | grep , "  ); 
+    cmd = paste( cmd, " | grep , "  );
+    ## force decimal point in ssconvert output under e.g. hungarian locale
+    cmd=paste( "LANG=",LANG," ", cmd, sep='' );
   }
   
   if ( ! quiet ){
@@ -215,4 +227,88 @@ read.gnumeric.range <-
                       ... )
 }
 
+## Note: read.gnumeric.sheet.names works, but is superfluous since
+## we have read.gnumeric.sheet.info
+##
+## return sheet names from a .gnumeric file
+## read.gnumeric.sheet.names <- function(filename){
+##  doc = xmlTreeParse(filename);
+##  x1 <- doc$doc$children$Workbook['SheetNameIndex'][[1]];
+##  x2=xmlSApply( x1, xmlValue );
+##  names(x2)=NULL;
+##  x2
+##}
 
+
+## return a data.frame with columns sheet.name (string), width
+## (integer, may be zero), height (integer, may be zero) bottom
+## (string or NA) to be passed to read.gnumeric.sheet if not
+## NA. bottom is NA if width or height is zero, i.e. when the sheet is
+## empty.
+read.gnumeric.sheet.info <- function(file){
+  doc = xmlTreeParse(file);
+  x1 <- doc$doc$children$Workbook['Sheets'][[1]];
+  names=c();
+  widths=c();
+  heights=c();
+
+  bottoms=c();
+  ABC=LETTERS;
+  ## COLNAMES: A .. AA, AB, .. IV
+  COLNAMES= as.vector( t(outer(c('',ABC[1:9]), ABC, paste, sep='')))[1:256]; 
+
+  for ( i in 1:length(x1) ){
+    xx <- x1[i];
+    width  <-  1+as.integer(xmlValue( xx$Sheet['MaxCol']$MaxCol[[1]] )) ;
+    height <-  1+as.integer(xmlValue( xx$Sheet['MaxRow']$MaxRow[[1]] )) ;
+    name   <-  xmlValue( xx$Sheet['Name']$Name[[1]]     ) ;
+    bottom <- if ( width==0 || height==0 ){
+      NA
+    } else {
+      paste( COLNAMES[width], height , sep='' );
+    }
+    
+    names=c(names,name);
+    widths=c(widths,width);
+    heights=c(heights,height);
+    bottoms=c(bottoms,bottom);
+  }
+  data.frame(sheet.name=names,
+             width=widths,
+             height=heights,
+             bottom.right=bottoms,
+             stringsAsFactors=FALSE );
+}
+
+## Read nonempty sheets from a .gnumeric file. Returns a list of
+## data.frames. Names in the list are the sheet names, values are read
+## using read.gnumeric.sheet
+read.gnumeric.sheets <- function(file,
+                                 head=FALSE,
+                                 drop.empty.rows="none",
+                                 drop.empty.columns="none",
+                                 colnames.as.sheet=FALSE,
+                                 rownames.as.sheet=colnames.as.sheet,
+                                 quiet=TRUE,
+                                 ...  ## passed to read.csv
+                                 ){
+  si <- read.gnumeric.sheet.info( file );
+  res=list();
+  for ( i in 1:nrow(si) ){
+    if ( !is.na(si[i,'bottom.right']) ){
+      x=read.gnumeric.sheet(file=file,head=head,
+        sheet.name=si[i,'sheet.name'],
+        bottom.right=si[i,'bottom.right'],
+        drop.empty.rows=drop.empty.rows,
+        drop.empty.columns=drop.empty.columns,
+        colnames.as.sheet=colnames.as.sheet,
+        rownames.as.sheet=rownames.as.sheet,
+        quiet=quiet,
+        ...
+        );
+      xx=list(x); names(xx)=si[i,'sheet.name'];
+      res=c(res,xx);
+    }
+  }
+  res;
+}

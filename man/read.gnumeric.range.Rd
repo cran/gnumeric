@@ -3,8 +3,8 @@
 \alias{read.gnumeric.range}
 \description{
   
-  Read data from a given cell range of a gnumeric file to a data
-  frame.
+  Read data from a given cell range of a gnumeric (or other type
+  supported by \code{ssconvert}) file to a data frame.
 
   By default drops no rows or columns, but requires at least bottom left
   corner of requested gnumeric cell range to be provided. Otherwise
