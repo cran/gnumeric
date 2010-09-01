@@ -13,6 +13,10 @@ library(XML);
 ##            --export-range='A1:Z100' (read whichever sheet was 'current'
 ##            in gnumeric when the file was saved)
 ##
+##            The sheet name may require extra quoting like: --export-range='"Sheet1"!A1:Z100'
+##
+##            Maybe we should use the text exporter: it has a sheet option.
+##
 ## quiet=TRUE uses '2>/dev/null' redirection (when .Platform$OS.type=="unix" )
 ##
 ##
@@ -69,12 +73,17 @@ read.gnumeric.sheet <-
   ### build command
   SHEET='';
   if ( !is.na(sheet.name) ){
-    SHEET=paste(sheet.name, '!', sep='' );
+    ### bug: Should check for '"' inside sheet.name
+    sheet.name.with.quotes = paste(sep='',  '"', sheet.name, '"' );
+    SHEET=paste(sheet.name.with.quotes, '!', sep='' );
   }
 
 
   ssconvert = "ssconvert";
-  if ( Sys.which( ssconvert ) == "" ){
+  ssconvert.full.path=Sys.which( ssconvert );
+  ## Wed Sep  1 08:11:00 2010 : On Solaris Sys.which returns a message instead of "",
+  ## thus we need to check the value returned does exist.
+  if ( ( ssconvert.full.path == "") || ! file.exists( ssconvert.full.path ) ){
     stop("Required program '",ssconvert,"' not found." );
   }
 
@@ -86,7 +95,7 @@ read.gnumeric.sheet <-
   ## --export-range needed because I know of no other way to select the
   ## sheet. This in turn forces to also provide top.left and
   ## bottom.right, even when we just want 'all the sheet'
-  cmd <- paste(ssconvert,
+  cmd <- paste(ssconvert.full.path,
                " --export-type=Gnumeric_stf:stf_csv ",
                " --export-range='", SHEET , top.left ,":", bottom.right,"' ",
                IMPORT.ENCODING,
@@ -95,17 +104,26 @@ read.gnumeric.sheet <-
 
 
   if ( .Platform$OS.type == "unix" ){
+    
     ## the 'grep ,' filter is a temporary workaround for .ods to ignore
     ## diagnostic messages (may be removed in 2010 as new version of
     ## libgsf comes out)
-    cmd = paste( cmd, " | grep , "  );
+    ##
+    ## Wed Sep 1 08:41:23 2010: 'grep ,' removed. NB: This workaround
+    ## made it impossible to read a single column, since in that case
+    ## even rows with data do not contain ','
+    ##
+    # cmd = paste( cmd, " | grep , "  );
+
+    
     ## force decimal point in ssconvert output under e.g. hungarian locale
     cmd=paste( "LANG=",LANG," ", cmd, sep='' );
   }
   
   if ( ! quiet ){
-    cat(cmd,"\n")
+    cat(cmd,"\n");
   } else {
+    ## redirect stderr of cmd to /dev/null
     if ( .Platform$OS.type == "unix" ){
       ## the 'grep ,' filter is a temporary workaround for ods
       ## to ignore diagnostic messages (may be removed in 2010)

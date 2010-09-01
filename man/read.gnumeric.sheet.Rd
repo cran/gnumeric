@@ -54,7 +54,8 @@ ssconvert from the gnumeric distribution}
     range as column names in the resulting \code{data.frame}}
   
   \item{sheet.name}{Name of sheet as appears in gnumeric.\cr
-    Sheet names containing space character do not work.
+    Sheet names containing space or hyphen characters do not work
+    (ssconvert reports 'Invalid range specified').
   
     \code{sheet.name=NA} Omits sheet name from the ssconvert command line.\cr
     For gnumeric files this will read the sheet that was 'current' in
@@ -180,7 +181,7 @@ Gnumeric_sylk:sylk           | MultiPlan (SYLK)
 Gnumeric_mps:mps             | Linear and integer program (*.mps)
                              |   file format
 Gnumeric_stf:stf_csvtab      | Comma or tab separated
-			     |   values (CSV/TSV)
+                             |   values (CSV/TSV)
 Gnumeric_stf:stf_assistant   | Text import (configurable)
   }
 
@@ -193,15 +194,18 @@ Gnumeric_stf:stf_assistant   | Text import (configurable)
   .xls  \tab gnumeric \tab works\cr
   .html \tab gnumeric  \samp{[Save as / HTML 4.0]}  \tab works\cr
   .html \tab Openoffice Calc \samp{[Save as/HTML Document]} \tab works\cr
-  .ods \tab  Openoffice Calc \tab might work[1]\cr
+  .ods \tab  Openoffice Calc \tab works\cr
   Other formats \tab \tab not tested
     }
-  
-    [1] during .ods import ssconvert emits some messages on stdout
-    (corrupts output). Worked around on unix with \samp{| grep ,}
-    on the output. (The problem has been corrected in libgsf
-    on 2009-08-20, thus the workaround is expected to be removable
-    by 2010)
+
+
+    
+% Wed Sep  1 09:41:17 2010 (workaround removed)
+%    [1] during .ods import ssconvert emits some messages on stdout
+%    (corrupts output). Worked around on unix with \samp{| grep ,}
+%    on the output. (The problem has been corrected in libgsf
+%    on 2009-08-20, thus the workaround is expected to be removable
+%    by 2010)
   
 %  Note: one could also write several file formats by feeding CSV to
 %  ssconvert (but that is not implemented here)

@@ -9,6 +9,7 @@
   Read data from each non-empty sheet of a gnumeric file to a list of
   data.frames.
   
+  All arguments are passed to \code{\link{read.gnumeric.sheet}}.
 }
 \usage{
 
@@ -26,12 +27,17 @@ df.list <- read.gnumeric.sheets(file,
 \arguments{
   
   \item{file}{Name of gnumeric file to read from.}
+
+  \item{head, drop.empty.rows, drop.empty.columns}{
+  See \code{\link{read.gnumeric.sheet}}}
   
-  \item{head, drop.empty.rows, drop.empty.columns}{}
   \item{colnames.as.sheet,rownames.as.sheet, quiet, ...}{
-    These are passed to \code{\link{read.gnumeric.sheet}}
+    See \code{\link{read.gnumeric.sheet}}
   }
-  
+
+%  Argument items with no description in Rd object 'read.gnumeric.sheets':
+%  head, drop.empty.rows, drop.empty.columns
+
 }
 
 \value{
@@ -60,6 +66,7 @@ df1 <- df.list['Sheet1'];
 df.list <- read.gnumeric.sheets( file="file.gnumeric",
                                  head=TRUE );
 
+names(df.list); ## sheet names
 }
 
 }
