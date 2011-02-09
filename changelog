@@ -1,3 +1,12 @@
+	(version 0.6-2)
+
+	(Wed Feb  9 22:51:36 2011)
+	Use  single quotes (not double quotes) around sheet name in
+	ssconvert --export-range="'Sheet1'!A1:Z100"
+	ssconvert 1.10.13 appears to require this.
+	Also:  use double quotes (not single) around "filename.gnumeric",
+	otherwise file not found. Windows does not understand single quotes?
+
 	(version 0.6-1)
 
 	(Thu Sep  2 08:58:24 2010)

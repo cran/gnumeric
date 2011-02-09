@@ -15,6 +15,15 @@ library(XML);
 ##
 ##            The sheet name may require extra quoting like: --export-range='"Sheet1"!A1:Z100'
 ##
+##            Wed Feb 9 22:40:12 2011: ssconvert for gnumeric 1.10.13
+##            does not accept --export-range='"Sheet1"!A1:Z100', but
+##            with double quotes outside and single quotes inside like
+##            --export-range="'Sheet1'!A1:Z100" appears to work
+##
+##            But: (on windows) quotes around the filename
+##            ("file.gnumeric") have to be double quotes. Maybe:
+##            windows does not understand single quotes.
+##
 ##            Maybe we should use the text exporter: it has a sheet option.
 ##
 ## quiet=TRUE uses '2>/dev/null' redirection (when .Platform$OS.type=="unix" )
@@ -74,7 +83,7 @@ read.gnumeric.sheet <-
   SHEET='';
   if ( !is.na(sheet.name) ){
     ### bug: Should check for '"' inside sheet.name
-    sheet.name.with.quotes = paste(sep='',  '"', sheet.name, '"' );
+    sheet.name.with.quotes = paste(sep='',  "'", sheet.name, "'" );
     SHEET=paste(sheet.name.with.quotes, '!', sep='' );
   }
 
@@ -97,9 +106,9 @@ read.gnumeric.sheet <-
   ## bottom.right, even when we just want 'all the sheet'
   cmd <- paste(ssconvert.full.path,
                " --export-type=Gnumeric_stf:stf_csv ",
-               " --export-range='", SHEET , top.left ,":", bottom.right,"' ",
+               " --export-range=", '"', SHEET , top.left ,":", bottom.right, '" ',
                IMPORT.ENCODING,
-               " '", file, "'",
+               ' "', file, '"',
                " fd://1 ", sep='');
 
 
