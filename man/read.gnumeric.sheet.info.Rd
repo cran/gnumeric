@@ -13,7 +13,7 @@
   
 }
 \usage{
-df <- read.gnumeric.sheet.info(file);
+  read.gnumeric.sheet.info(file);
 }
 
 \arguments{

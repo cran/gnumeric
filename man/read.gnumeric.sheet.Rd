@@ -5,6 +5,7 @@ Quatro Pro, Paradox, HTML, etc) spreadsheet or database file using
 ssconvert from the gnumeric distribution}
 
 \alias{read.gnumeric.sheet}
+\alias{read.gnumeric.range}
 
 \description{
   
@@ -21,23 +22,42 @@ ssconvert from the gnumeric distribution}
   Note: During conversion to CSV \samp{ssconvert} also evaluates formulas
   (e.g. \samp{=sum(A1:A3)}) in cells, and emits the result instead of
   the formula.
+
+
+  \samp{read.gnumeric.range} just calls \samp{read.gnumeric.sheet}, but
+  uses different default values for its arguments: by default drops no
+  rows or columns and requires at least the bottom
+  left corner of requested gnumeric cell range to be provided.
+  
 }
 \usage{
-  df<-read.gnumeric.sheet(file,
-                          head=FALSE,
-                          sheet.name='Sheet1',
-                          top.left='A1',
-                          bottom.right='IV65536',
-                          drop.empty.rows="bottom", 
-                          drop.empty.columns="right",
-                          colnames.as.sheet=FALSE,
-                          rownames.as.sheet=colnames.as.sheet,
-                          quiet=TRUE,
-                          LANG='C',
-                          import.encoding=NA,
-                          ...
-                         )
+  read.gnumeric.sheet(file,
+                      head=FALSE,
+                      sheet.name='Sheet1',
+                      top.left='A1',
+                      bottom.right='IV65536',
+                      drop.empty.rows="bottom", 
+                      drop.empty.columns="right",
+                      colnames.as.sheet=FALSE,
+                      rownames.as.sheet=colnames.as.sheet,
+                      quiet=TRUE,
+                      LANG='C',
+                      import.encoding=NA,
+                      ...
+                     );
 
+  read.gnumeric.range(file,       
+       head=FALSE, 
+       sheet.name='Sheet1', 
+       top.left='A1',
+       bottom.right, 
+       drop.empty.rows="none", 
+       drop.empty.columns="none",
+       colnames.as.sheet=FALSE,
+       rownames.as.sheet=colnames.as.sheet,
+       quiet=TRUE,
+       ... 
+       );
 }
 
 \arguments{

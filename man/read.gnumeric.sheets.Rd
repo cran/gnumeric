@@ -13,15 +13,15 @@
 }
 \usage{
 
-df.list <- read.gnumeric.sheets(file,
-                                head=FALSE,
-                                drop.empty.rows="none",
-                                drop.empty.columns="none",
-                                colnames.as.sheet=FALSE,
-                                rownames.as.sheet=colnames.as.sheet,
-                                quiet=TRUE,
-                                ...  
-                                );
+read.gnumeric.sheets(file,
+                     head=FALSE,
+                     drop.empty.rows="none",
+                     drop.empty.columns="none",
+                     colnames.as.sheet=FALSE,
+                     rownames.as.sheet=colnames.as.sheet,
+                     quiet=TRUE,
+                     ...  
+                     );
 }
 
 \arguments{

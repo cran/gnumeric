@@ -1,3 +1,9 @@
+	(version 0.6-3)
+
+	(Mon Mar 21 09:43:25 2011)
+	Merged documentation of read.gnumeric.range to read.gnumeric.sheet.
+	Removed assignments from \usage{} sections.
+
 	(version 0.6-2)
 
 	(Wed Feb  9 22:51:36 2011)
