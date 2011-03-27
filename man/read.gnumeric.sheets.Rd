@@ -20,6 +20,10 @@ read.gnumeric.sheets(file,
                      colnames.as.sheet=FALSE,
                      rownames.as.sheet=colnames.as.sheet,
                      quiet=TRUE,
+                     LANG='C',                  
+                     locale='C',                
+                     import.encoding=NA,        
+                     field.format='automatic',  
                      ...  
                      );
 }
@@ -31,10 +35,13 @@ read.gnumeric.sheets(file,
   \item{head, drop.empty.rows, drop.empty.columns}{
   See \code{\link{read.gnumeric.sheet}}}
   
-  \item{colnames.as.sheet,rownames.as.sheet, quiet, ...}{
+  \item{colnames.as.sheet,rownames.as.sheet, quiet}{
     See \code{\link{read.gnumeric.sheet}}
   }
 
+  \item{LANG, locale, import.encoding, field.format, ...}{ See
+    \code{\link{read.gnumeric.sheet}} }
+  
 %  Argument items with no description in Rd object 'read.gnumeric.sheets':
 %  head, drop.empty.rows, drop.empty.columns
 

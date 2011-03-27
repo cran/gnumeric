@@ -35,14 +35,16 @@ ssconvert from the gnumeric distribution}
                       head=FALSE,
                       sheet.name='Sheet1',
                       top.left='A1',
-                      bottom.right='IV65536',
+                      bottom.right=NA, 
                       drop.empty.rows="bottom", 
                       drop.empty.columns="right",
                       colnames.as.sheet=FALSE,
                       rownames.as.sheet=colnames.as.sheet,
                       quiet=TRUE,
                       LANG='C',
+                      locale='C',
                       import.encoding=NA,
+                      field.format='automatic',
                       ...
                      );
 
@@ -56,6 +58,10 @@ ssconvert from the gnumeric distribution}
        colnames.as.sheet=FALSE,
        rownames.as.sheet=colnames.as.sheet,
        quiet=TRUE,
+       LANG='C',
+       locale='C',
+       import.encoding=NA,
+       field.format='automatic',
        ... 
        );
 }
@@ -87,10 +93,17 @@ ssconvert from the gnumeric distribution}
   
   \item{bottom.right}{Bottom right corner of requested gnumeric sheet
     range.\cr
-    The default for \code{read.gnumeric.sheet} is \code{'IV65536'}: this
-    causes a lot of unused lines to be printed by \samp{ssconvert} then
-    parsed by \code{read.csv}, thus you might want to override it to
-    speed up reading.
+
+    The default for \code{read.gnumeric.sheet} is \code{NA}: with
+    \code{top.left='A1'} or \code{top.left=NA} this means read full
+    sheet.
+
+    If \code{top.left} is not \code{'A1'} or \code{NA} (i.e. when
+    reading partial sheet), then the interpretation of
+    \code{bottom.right=NA} falls back to 
+    \code{'IV65536'}: this causes a lot of unused lines to be printed by
+    \samp{ssconvert} then parsed by \code{read.csv}, thus you might want
+    to override it to speed up reading.
 
     Use \code{\link{read.gnumeric.sheet.info}} to read actual
     bottom.right cell name from a gnumeric file (but not other formats).
@@ -129,12 +142,32 @@ ssconvert from the gnumeric distribution}
   
   \item{LANG}{ Under unix, passed to \code{ssconvert} in the environment
     variable 'LANG'. The default value (\code{'C'}) is intended to avoid
-    using decimal comma in the emitted CSV file. }
+    using decimal comma in the emitted CSV file. It is probably always
+    overridden by the \code{locale} argument.
+  }
 
+  \item{locale}{Passed to \code{ssconvert -O "locale=C"}
+    The default value (\code{'C'}) is intended to avoid
+    using decimal comma in the emitted CSV file.}
+  
   \item{import.encoding}{If not NA, passed to \code{ssconvert} as its
     \code{ --import-encoding } parameter.
     % One might also need to pass encoding='XXX' in ... to read.csv if
     % encoding issues arise.
+  }
+
+  \item{field.format}{ Passed to \code{ssconvert -O "format=value"}.
+    Allowed values: "raw", "automatic", "preserve".
+
+    "raw" emits date and datetime values as number of days since an
+    (unspecified) epoch. E.g.:
+    \code{as.numeric(as.character(x))+as.Date('1899-12-30')} might work
+    for date values and\cr
+    \code{as.POSIXct(as.numeric(as.character(x))*}\cr
+    \code{(60*60*24),
+      origin="1899-12-29 23:59:59", tz='UTC')} might work for datetime
+    values. See \code{help(as.Date)} for some comments on Excel epoch values.
+    
   }
   
   \item{...}{Extra arguments, passed to \code{\link{read.csv}}}

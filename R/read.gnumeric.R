@@ -40,11 +40,11 @@ read.gnumeric.sheet <-
                                 ## gnumeric
            top.left='A1',       ## top left cell to request from
                                 ## ssconvert (gnumeric utility)
-           bottom.right='IV65536', ## bottom right cell. The default
-                                   ## reads all rows, which is
-                                   ## slow. Speed up by giving a more
-                                   ## accurate upper bound, or
-                                   ## accurate value.
+           bottom.right=NA,    ## bottom right cell. The default
+                               ## reads all rows, which is
+                               ## slow. Speed up by giving a more
+                               ## accurate upper bound, or
+                               ## accurate value.
            drop.empty.rows="bottom", ## Drop rows containing only NAs
                                      ## and empty strings from result
            drop.empty.columns="right",## Drop columns containing only
@@ -64,7 +64,10 @@ read.gnumeric.sheet <-
                                       ## to /dev/null and do not print
                                       ## command executed
            LANG='C',                  ## Environment for ssconvert under unix
+           locale='C',                ## value for: ssconvert -O "locale=C"
            import.encoding=NA,        ## --import-encoding for ssconvert
+           field.format='automatic',  ## For: ssconvert -O "format=value".
+                                      ## Options: raw automatic preserve
            ... ## passed to read.csv
            )
 {
@@ -76,15 +79,17 @@ read.gnumeric.sheet <-
   if ( ! drop.empty.columns %in% c('none','left','right','both', 'all' ) ){
     stop( "drop.empty.columns is not in c('none','left','right','both', 'all' )" )
   }
-
+  if ( ! field.format %in% c('raw', 'automatic', 'preserve') ){
+    stop( "field.format is not in c('raw', 'automatic', 'preserve')" );
+  }
 
 
   ### build command
   SHEET='';
   if ( !is.na(sheet.name) ){
-    ### bug: Should check for '"' inside sheet.name
+    ### bug: Should check for "'" inside sheet.name
     sheet.name.with.quotes = paste(sep='',  "'", sheet.name, "'" );
-    SHEET=paste(sheet.name.with.quotes, '!', sep='' );
+    SHEET=paste(sheet.name.with.quotes, sep='' );
   }
 
 
@@ -104,27 +109,40 @@ read.gnumeric.sheet <-
   ## --export-range needed because I know of no other way to select the
   ## sheet. This in turn forces to also provide top.left and
   ## bottom.right, even when we just want 'all the sheet'
+  #  cmd <- paste(ssconvert.full.path,
+  #               " --export-type=Gnumeric_stf:stf_csv ",
+  #               " --export-range=", '"', SHEET , top.left ,":", bottom.right, '" ',
+  #               IMPORT.ENCODING,
+  #               ' "', file, '"',
+  #               " fd://1 ", sep='');
+
+  ## With --export-type=Gnumeric_stf:stf_assistant we can select the
+  ## sheet without using --export-range. 
+  
+  if (is.na(bottom.right) && (is.na(top.left)|| top.left=="A1" ) ){
+     range="";
+  } else {
+    if ( is.na(top.left) ){
+      top.left = 'A1';
+    }
+    if ( is.na( bottom.right ) ){
+      bottom.right = 'IV65536';
+    }
+    range=paste(sep='', " --export-range=", '"', SHEET , "!",top.left ,":", bottom.right, '" ');
+  }
+
   cmd <- paste(ssconvert.full.path,
-               " --export-type=Gnumeric_stf:stf_csv ",
-               " --export-range=", '"', SHEET , top.left ,":", bottom.right, '" ',
+               " --export-type=Gnumeric_stf:stf_assistant ",
+               ' -O "locale=',locale,
+                   ' format=',field.format,
+                   ' separator=, eol=unix sheet=',
+               sheet.name.with.quotes ,'"',
+               range , 
                IMPORT.ENCODING,
                ' "', file, '"',
                " fd://1 ", sep='');
 
-
   if ( .Platform$OS.type == "unix" ){
-    
-    ## the 'grep ,' filter is a temporary workaround for .ods to ignore
-    ## diagnostic messages (may be removed in 2010 as new version of
-    ## libgsf comes out)
-    ##
-    ## Wed Sep 1 08:41:23 2010: 'grep ,' removed. NB: This workaround
-    ## made it impossible to read a single column, since in that case
-    ## even rows with data do not contain ','
-    ##
-    # cmd = paste( cmd, " | grep , "  );
-
-    
     ## force decimal point in ssconvert output under e.g. hungarian locale
     cmd=paste( "LANG=",LANG," ", cmd, sep='' );
   }
@@ -144,7 +162,7 @@ read.gnumeric.sheet <-
   }
 
   ### read data
-  x=read.csv( pipe( cmd  ) , head=head, ... )
+  x=read.csv( pipe( cmd  ) , head=head, encoding="UTF-8", ... )
 
   ### optionally rename columns and rows to correspond to gnumeric
   ### cell names.
@@ -238,6 +256,10 @@ read.gnumeric.range <-
            colnames.as.sheet=FALSE,
            rownames.as.sheet=colnames.as.sheet,
            quiet=TRUE,
+           LANG='C',
+           locale='C',
+           import.encoding=NA,
+           field.format='automatic',
            ... ## passed to read.csv
            )
 {
@@ -251,7 +273,11 @@ read.gnumeric.range <-
                       colnames.as.sheet, 
                       rownames.as.sheet,
                       quiet,
-                      ... )
+                      LANG=LANG,
+                      locale=locale,
+                      import.encoding=import.encoding,
+                      field.format=field.format,
+                      ... );
 }
 
 ## Note: read.gnumeric.sheet.names works, but is superfluous since
@@ -317,6 +343,10 @@ read.gnumeric.sheets <- function(file,
                                  colnames.as.sheet=FALSE,
                                  rownames.as.sheet=colnames.as.sheet,
                                  quiet=TRUE,
+                                 LANG='C',                  
+                                 locale='C',                
+                                 import.encoding=NA,        
+                                 field.format='automatic',  
                                  ...  ## passed to read.csv
                                  ){
   si <- read.gnumeric.sheet.info( file );
@@ -325,12 +355,16 @@ read.gnumeric.sheets <- function(file,
     if ( !is.na(si[i,'bottom.right']) ){
       x=read.gnumeric.sheet(file=file,head=head,
         sheet.name=si[i,'sheet.name'],
-        bottom.right=si[i,'bottom.right'],
+        bottom.right=NA, #si[i,'bottom.right'],
         drop.empty.rows=drop.empty.rows,
         drop.empty.columns=drop.empty.columns,
         colnames.as.sheet=colnames.as.sheet,
         rownames.as.sheet=rownames.as.sheet,
         quiet=quiet,
+        LANG=LANG,
+        locale=locale,
+        import.encoding=import.encoding,
+        field.format=field.format,
         ...
         );
       xx=list(x); names(xx)=si[i,'sheet.name'];
@@ -339,3 +373,18 @@ read.gnumeric.sheets <- function(file,
   }
   res;
 }
+
+### ### gnumeric.raw.date.epoch may vary depending on a code in .gnumeric
+### ### files. Possibly also on the input file type for non .gnumeric files.
+### ### For variations on good values for 'epoch' see:
+### ### help(as.Date)  (search for 'Excel')
+### gnumeric.raw.date.as.date <- function(x,epoch='1899-12-30'){
+###   v=as.numeric(as.character(x));
+###   v+as.Date(epoch);
+### }
+### 
+### gnumeric.raw.datetime.as.datetime <- function(x, epoch="1899-12-29 23:59:59", tz='UTC'){
+###   as.POSIXct(as.numeric(as.character(x))*(60*60*24),  origin=epoch, tz=tz)
+### }
+
+

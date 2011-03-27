@@ -1,3 +1,24 @@
+	(version 0.7-1)
+
+	(Sun Mar 27 22:07:19 2011)
+
+	Using --export-type=Gnumeric_stf:stf_assistant (instead of
+	--export-type=Gnumeric_stf:stf_csv) for better control of output
+	from ssconvert.
+
+	When reading full sheets, now we avoid using an undocumented
+	option of ssconvert (--export-range). We are still using it though
+	for partial sheets.
+
+	read.gnumeric.sheet:
+	    - bottom.right defaults to NA instead of 'IV65536'
+	    - new arg: locale='C', ## value for: ssconvert -O "locale=C"
+	    - new arg: field.format='automatic',
+	                     ## For: ssconvert -O "format=value".
+                             ## Options: raw automatic preserve
+
+
+
 	(version 0.6-3)
 
 	(Mon Mar 21 09:43:25 2011)

@@ -1,0 +1,7 @@
+d43cf8afbf42105063e91c06ce56a608 *DESCRIPTION
+29f34b3506206e843cdd5b85382b3090 *NAMESPACE
+513baa04f73363f10b880aaf8324c13c *R/read.gnumeric.R
+d30c911cbe3d907b9fbff3f03ebc3992 *changelog
+3408cb42031f4c6316066b049a3924ac *man/read.gnumeric.sheet.Rd
+0c986d7c6395a9e113b40a87c59fab27 *man/read.gnumeric.sheet.info.Rd
+e26f3bd714338e7dc2874291cbe74fea *man/read.gnumeric.sheets.Rd
