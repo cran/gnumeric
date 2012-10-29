@@ -1,6 +1,6 @@
 Package: gnumeric
-Version: 0.7-1
-Date: 2011-03-27
+Version: 0.7-2
+Date: 2012-10-29
 Title: Read data from files readable by gnumeric
 Author: Karoly Antal <antalk2@gmail.com>.
 Maintainer: Karoly Antal <antalk2@gmail.com>
@@ -15,5 +15,5 @@ Description: Read data files readable by gnumeric into R. Can read
         sheets.
 License: GPL (>= 2)
 Repository: CRAN
-Date/Publication: 2012-10-29 08:58:54
-Packaged: 2012-10-29 08:58:54 UTC; ripley
+Date/Publication: 2012-10-30 06:29:31
+Packaged: 2012-10-29 18:46:09 UTC; antalk

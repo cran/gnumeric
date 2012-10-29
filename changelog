@@ -1,3 +1,13 @@
+	(version 0.7-2)
+
+	(Mon Oct 29 19:03:44 2012)
+
+	R now needs NAMESPACE file ==> Edited NAMESPACE file
+
+	read.gnumeric.sheet: warning in read.csv(pipe(cmd), head = head,
+	encoding = "UTF-8", ...): partial argument match of 'head' to
+	'header' ==> now use 'header' for read.csv
+
 	(version 0.7-1)
 
 	(Sun Mar 27 22:07:19 2011)

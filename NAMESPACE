@@ -1,8 +1,5 @@
-# Default NAMESPACE created by R
-# Remove the previous line if you edit this file
-
-# Export all names
-exportPattern(".")
+# exported names
+export("read.gnumeric.sheet.info","read.gnumeric.sheet","read.gnumeric.sheets","read.gnumeric.range")
 
 # Import all packages listed as Imports or Depends
 import(

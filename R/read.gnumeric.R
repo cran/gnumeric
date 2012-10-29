@@ -162,7 +162,7 @@ read.gnumeric.sheet <-
   }
 
   ### read data
-  x=read.csv( pipe( cmd  ) , head=head, encoding="UTF-8", ... )
+  x=read.csv( pipe( cmd  ) , header=head, encoding="UTF-8", ... )
 
   ### optionally rename columns and rows to correspond to gnumeric
   ### cell names.
