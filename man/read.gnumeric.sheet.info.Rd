@@ -7,8 +7,9 @@
 \description{
   
   Read \code{sheet.name}, \code{width} and \code{height} of sheets of a
-  gnumeric file to a \code{data.frame}. Also constructs cell name for the
-  \code{bottom.right} cells, these can be passed to
+  gnumeric file to a \code{data.frame}. \cr
+  Also constructs cell name for the
+  \code{bottom.right} cells, these can be passed to\cr
   \code{\link{read.gnumeric.sheet}} or \code{\link{read.gnumeric.range}}
   
 }

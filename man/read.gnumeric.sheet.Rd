@@ -13,7 +13,9 @@ ssconvert from the gnumeric distribution}
   database) file to a data.frame.
   
   Requires an external program, \samp{ssconvert} (normally installed
-  with gnumeric (\url{http://projects.gnome.org/gnumeric/}) in \samp{PATH}.
+  with gnumeric in \samp{PATH}.
+
+  (Gnumeric home page is \url{http://projects.gnome.org/gnumeric/})
   
   Calls \samp{ssconvert} to convert the input to CSV.
   \samp{ssconvert} can read several file formats
@@ -146,7 +148,7 @@ ssconvert from the gnumeric distribution}
     overridden by the \code{locale} argument.
   }
 
-  \item{locale}{Passed to \code{ssconvert -O "locale=C"}
+  \item{locale}{Passed to \code{ssconvert -O "locale=C"}\cr
     The default value (\code{'C'}) is intended to avoid
     using decimal comma in the emitted CSV file.}
   
@@ -160,12 +162,11 @@ ssconvert from the gnumeric distribution}
     Allowed values: "raw", "automatic", "preserve".
 
     "raw" emits date and datetime values as number of days since an
-    (unspecified) epoch. E.g.:
-    \code{as.numeric(as.character(x))+as.Date('1899-12-30')} might work
+    (unspecified) epoch. \cr
+    E.g.: \code{as.numeric(as.character(x))+as.Date('1899-12-30')} might work
     for date values and\cr
-    \code{as.POSIXct(as.numeric(as.character(x))*}\cr
-    \code{(60*60*24),
-      origin="1899-12-29 23:59:59", tz='UTC')} might work for datetime
+    \code{as.POSIXct(as.numeric(as.character(x))*(60*60*24),}\cr
+    \code{           origin="1899-12-29 23:59:59", tz='UTC')} might work for datetime
     values. See \code{help(as.Date)} for some comments on Excel epoch values.
     
   }

@@ -5,3 +5,5 @@ export("read.gnumeric.sheet.info","read.gnumeric.sheet","read.gnumeric.sheets","
 import(
   XML
 )
+
+importFrom("utils","read.csv")

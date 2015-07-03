@@ -1,10 +1,11 @@
 Package: gnumeric
-Version: 0.7-2
-Date: 2012-10-29
-Title: Read data from files readable by gnumeric
+Version: 0.7-4
+Date: 2015-07-03
+Title: Read Data from Files Readable by Gnumeric
 Author: Karoly Antal <antalk2@gmail.com>.
 Maintainer: Karoly Antal <antalk2@gmail.com>
 Depends: R (>= 2.8.1), XML
+Imports: utils
 Description: Read data files readable by gnumeric into R. Can read
         whole sheet or a range, from several file formats, including
         the native format of gnumeric. Reading is done by using
@@ -15,5 +16,6 @@ Description: Read data files readable by gnumeric into R. Can read
         sheets.
 License: GPL (>= 2)
 Repository: CRAN
-Date/Publication: 2012-10-30 06:29:31
-Packaged: 2012-10-29 18:46:09 UTC; antalk
+Date/Publication: 2015-07-03 13:43:59
+Packaged: 2015-07-03 11:26:32 UTC; antalk
+NeedsCompilation: no
