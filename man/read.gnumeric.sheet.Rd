@@ -8,15 +8,17 @@ ssconvert from the gnumeric distribution}
 \alias{read.gnumeric.range}
 
 \description{
-  
+
   Read data from a sheet of a gnumeric (or other common spreadsheet or
   database) file to a data.frame.
-  
+
   Requires an external program, \samp{ssconvert} (normally installed
   with gnumeric in \samp{PATH}.
 
   (Gnumeric home page is \url{http://projects.gnome.org/gnumeric/})
-  
+
+  (Note: last gnumeric release for windows is 1.12.17 from 2014)
+
   Calls \samp{ssconvert} to convert the input to CSV.
   \samp{ssconvert} can read several file formats
   (see Details below).
@@ -30,15 +32,15 @@ ssconvert from the gnumeric distribution}
   uses different default values for its arguments: by default drops no
   rows or columns and requires at least the bottom
   left corner of requested gnumeric cell range to be provided.
-  
+
 }
 \usage{
   read.gnumeric.sheet(file,
                       head=FALSE,
                       sheet.name='Sheet1',
                       top.left='A1',
-                      bottom.right=NA, 
-                      drop.empty.rows="bottom", 
+                      bottom.right=NA,
+                      drop.empty.rows="bottom",
                       drop.empty.columns="right",
                       colnames.as.sheet=FALSE,
                       rownames.as.sheet=colnames.as.sheet,
@@ -50,12 +52,12 @@ ssconvert from the gnumeric distribution}
                       ...
                      );
 
-  read.gnumeric.range(file,       
-       head=FALSE, 
-       sheet.name='Sheet1', 
+  read.gnumeric.range(file,
+       head=FALSE,
+       sheet.name='Sheet1',
        top.left='A1',
-       bottom.right, 
-       drop.empty.rows="none", 
+       bottom.right,
+       drop.empty.rows="none",
        drop.empty.columns="none",
        colnames.as.sheet=FALSE,
        rownames.as.sheet=colnames.as.sheet,
@@ -64,35 +66,35 @@ ssconvert from the gnumeric distribution}
        locale='C',
        import.encoding=NA,
        field.format='automatic',
-       ... 
+       ...
        );
 }
 
 \arguments{
-  
+
   \item{file}{Name of gnumeric file (or other file type readable by
     gnumeric) to read from.
 
     This may also be an URL, i.e. like\cr
     \code{'http://example.com/path/file.gnumeric'}
-  
+
   }
-  
+
   \item{head}{When TRUE, use first row of requested gnumeric sheet
     range as column names in the resulting \code{data.frame}}
-  
+
   \item{sheet.name}{Name of sheet as appears in gnumeric.\cr
     Sheet names containing space or hyphen characters do not work
     (ssconvert reports 'Invalid range specified').
-  
+
     \code{sheet.name=NA} Omits sheet name from the ssconvert command line.\cr
     For gnumeric files this will read the sheet that was 'current' in
-      gnumeric when the file was saved. 
+      gnumeric when the file was saved.
   }
-  
+
   \item{top.left}{Top left corner of requested gnumeric sheet
     range, e.g. \code{'A1'}}
-  
+
   \item{bottom.right}{Bottom right corner of requested gnumeric sheet
     range.\cr
 
@@ -102,7 +104,7 @@ ssconvert from the gnumeric distribution}
 
     If \code{top.left} is not \code{'A1'} or \code{NA} (i.e. when
     reading partial sheet), then the interpretation of
-    \code{bottom.right=NA} falls back to 
+    \code{bottom.right=NA} falls back to
     \code{'IV65536'}: this causes a lot of unused lines to be printed by
     \samp{ssconvert} then parsed by \code{read.csv}, thus you might want
     to override it to speed up reading.
@@ -137,11 +139,11 @@ ssconvert from the gnumeric distribution}
     \code{top.left} and \code{head} are accounted for, but not
     e.g. \code{skip} (which may be passed to \code{read.csv} via \code{...}).
   }
-  
+
   \item{quiet}{When TRUE, do not print command executed, and (on unix
     platforms) also redirect stderr of the external program
     \samp{ssconvert} to /dev/null}
-  
+
   \item{LANG}{ Under unix, passed to \code{ssconvert} in the environment
     variable 'LANG'. The default value (\code{'C'}) is intended to avoid
     using decimal comma in the emitted CSV file. It is probably always
@@ -151,7 +153,7 @@ ssconvert from the gnumeric distribution}
   \item{locale}{Passed to \code{ssconvert -O "locale=C"}\cr
     The default value (\code{'C'}) is intended to avoid
     using decimal comma in the emitted CSV file.}
-  
+
   \item{import.encoding}{If not NA, passed to \code{ssconvert} as its
     \code{ --import-encoding } parameter.
     % One might also need to pass encoding='XXX' in ... to read.csv if
@@ -168,9 +170,9 @@ ssconvert from the gnumeric distribution}
     \code{as.POSIXct(as.numeric(as.character(x))*(60*60*24),}\cr
     \code{           origin="1899-12-29 23:59:59", tz='UTC')} might work for datetime
     values. See \code{help(as.Date)} for some comments on Excel epoch values.
-    
+
   }
-  
+
   \item{...}{Extra arguments, passed to \code{\link{read.csv}}}
 }
 
@@ -179,15 +181,15 @@ ssconvert from the gnumeric distribution}
 
   \code{\link{read.gnumeric.range}} for a variant with default
   arguments more suited for reading an exact cell range of a sheet.
-  
+
 
   \code{\link{read.gnumeric.sheet.info}} to read actual
   bottom.right cell name from a gnumeric file (but not other formats).
-  
+
   \code{\link{read.gnumeric.sheets}} to read all sheets
   from a gnumeric file (but not other formats).
-  
-  
+
+
   \code{\link[gdata]{read.xls}} for reading Microsoft Excel files
   (possibly from a \samp{http://} URL)
 
@@ -241,7 +243,7 @@ Gnumeric_stf:stf_assistant   | Text import (configurable)
 
   But the actual list may depend on
   which import plugins are installed for gnumeric.
-  
+
   \tabular{lll}{
     Format \tab Source \tab Status\cr
   .gnumeric  \tab gnumeric \tab works\cr
@@ -253,14 +255,14 @@ Gnumeric_stf:stf_assistant   | Text import (configurable)
     }
 
 
-    
+
 % Wed Sep  1 09:41:17 2010 (workaround removed)
 %    [1] during .ods import ssconvert emits some messages on stdout
 %    (corrupts output). Worked around on unix with \samp{| grep ,}
 %    on the output. (The problem has been corrected in libgsf
 %    on 2009-08-20, thus the workaround is expected to be removable
 %    by 2010)
-  
+
 %  Note: one could also write several file formats by feeding CSV to
 %  ssconvert (but that is not implemented here)
 }
@@ -278,12 +280,12 @@ df <- read.gnumeric.sheet( file="file.gnumeric",
 ## Read from Excel sheet named 'Sheet3' the range C3:D50,
 ## rename columns to 'C' and 'D', rows to '3' ... '50',
 ## then drop all empty rows.
-## 
+##
 df<-read.gnumeric.sheet( "file.xls",
                           sheet.name='Sheet3',
                           top.left='C3',
                           bottom.right='D50',
-                          drop.empty.rows="all", 
+                          drop.empty.rows="all",
                           drop.empty.columns="none",
                           colnames.as.sheet=TRUE
                          )

@@ -1,6 +1,6 @@
-9e30d30c8b5a1eea92f192f2842d5659 *DESCRIPTION
+0f39dc4bfb7119912a07b397413e89ad *DESCRIPTION
 fc225e7b086c227d42a2cf0186a9f0c0 *NAMESPACE
-29c4b16c4de4466516dbf62d406b236c *R/read.gnumeric.R
-2beb1abf35201cbd230dba076ddc7f5e *man/read.gnumeric.sheet.Rd
+d0d00172706fc9e14fd4897eb74ee3b6 *R/read.gnumeric.R
+f45f3f804c8437dc46fb985860f55c83 *man/read.gnumeric.sheet.Rd
 6f7316f7d55d820c0bb6dfa1b1cd9cce *man/read.gnumeric.sheet.info.Rd
 e26f3bd714338e7dc2874291cbe74fea *man/read.gnumeric.sheets.Rd

@@ -1,4 +1,4 @@
-### install.packages("XML", repos = "http://www.omegahat.org/R")
+
 library(XML);
 
 ## sheet.name defaults to 'Sheet1' instead of NA, which would get the
@@ -105,7 +105,7 @@ read.gnumeric.sheet <-
   if ( ! is.na( import.encoding ) ){
     IMPORT.ENCODING = paste(" --import-encoding='", import.encoding, "' ", sep='' );
   }
-  
+
   ## --export-range needed because I know of no other way to select the
   ## sheet. This in turn forces to also provide top.left and
   ## bottom.right, even when we just want 'all the sheet'
@@ -117,8 +117,8 @@ read.gnumeric.sheet <-
   #               " fd://1 ", sep='');
 
   ## With --export-type=Gnumeric_stf:stf_assistant we can select the
-  ## sheet without using --export-range. 
-  
+  ## sheet without using --export-range.
+
   if (is.na(bottom.right) && (is.na(top.left)|| top.left=="A1" ) ){
      range="";
   } else {
@@ -137,7 +137,7 @@ read.gnumeric.sheet <-
                    ' format=',field.format,
                    ' separator=, eol=unix sheet=',
                sheet.name.with.quotes ,'"',
-               range , 
+               range ,
                IMPORT.ENCODING,
                ' "', file, '"',
                " fd://1 ", sep='');
@@ -146,7 +146,7 @@ read.gnumeric.sheet <-
     ## force decimal point in ssconvert output under e.g. hungarian locale
     cmd=paste( "LANG=",LANG," ", cmd, sep='' );
   }
-  
+
   if ( ! quiet ){
     cat(cmd,"\n");
   } else {
@@ -157,7 +157,7 @@ read.gnumeric.sheet <-
       cmd = paste( cmd, " 2> /dev/null " ); ## unix
     } else {
       ## ( .Platform$OS.type == "windows" )
-      ## ??? 2>NIL:  ??? or similar? 
+      ## ??? 2>NIL:  ??? or similar?
     }
   }
 
@@ -169,7 +169,7 @@ read.gnumeric.sheet <-
   if ( colnames.as.sheet || rownames.as.sheet ){
     ABC=LETTERS;
     ## COLNAMES: A .. AA, AB, .. IV
-    COLNAMES= as.vector( t(outer(c('',ABC[1:9]), ABC, paste, sep='')))[1:256]; 
+    COLNAMES= as.vector( t(outer(c('',ABC[1:9]), ABC, paste, sep='')))[1:256];
 
     left=''
     i=1;
@@ -191,12 +191,12 @@ read.gnumeric.sheet <-
       if ( head ){
         top = top+1;
       }
-      
+
       rownames(x) = top:(top+length(x[[1]])-1)
     }
   }
 
-  ### optionally drop empty columns and rows 
+  ### optionally drop empty columns and rows
   if ( drop.empty.columns != "none" || drop.empty.rows!="none" ){
     ## drop empty columns and rows
     last.col=length(x);
@@ -210,11 +210,11 @@ read.gnumeric.sheet <-
     if ( drop.empty.rows != "none" ){
       bi=!apply(m,1,is.empty);
       i=i[bi]; ## indices of non-empty rows
-      
+
       if ( drop.empty.rows == "bottom" ){
         ## extend i to include all rows from row 1 to last non-empty
         ## (includes empty rows between non-empty ones as well)
-        i = 1:i[length(i)]; 
+        i = 1:i[length(i)];
       } else if ( drop.empty.rows == "top" ){
         i = i[1]:last.row
       } else if ( drop.empty.rows == "both" ){
@@ -237,7 +237,7 @@ read.gnumeric.sheet <-
     }
     x=x[i,j]
   }
-  
+
   x
 }
 
@@ -246,12 +246,12 @@ read.gnumeric.sheet <-
 ## Like read.gnumeric.sheet, but bottom.right is mandatory and we drop
 ## no rows or columns by default.
 read.gnumeric.range <-
-  function(file,       
-           head=FALSE, 
-           sheet.name='Sheet1', 
+  function(file,
+           head=FALSE,
+           sheet.name='Sheet1',
            top.left='A1',
-           bottom.right, 
-           drop.empty.rows="none", 
+           bottom.right,
+           drop.empty.rows="none",
            drop.empty.columns="none",
            colnames.as.sheet=FALSE,
            rownames.as.sheet=colnames.as.sheet,
@@ -270,7 +270,7 @@ read.gnumeric.range <-
                       bottom.right,
                       drop.empty.rows,
                       drop.empty.columns,
-                      colnames.as.sheet, 
+                      colnames.as.sheet,
                       rownames.as.sheet,
                       quiet,
                       LANG=LANG,
@@ -308,7 +308,7 @@ read.gnumeric.sheet.info <- function(file){
   bottoms=c();
   ABC=LETTERS;
   ## COLNAMES: A .. AA, AB, .. IV
-  COLNAMES= as.vector( t(outer(c('',ABC[1:9]), ABC, paste, sep='')))[1:256]; 
+  COLNAMES= as.vector( t(outer(c('',ABC[1:9]), ABC, paste, sep='')))[1:256];
 
   for ( i in 1:length(x1) ){
     xx <- x1[i];
@@ -320,7 +320,7 @@ read.gnumeric.sheet.info <- function(file){
     } else {
       paste( COLNAMES[width], height , sep='' );
     }
-    
+
     names=c(names,name);
     widths=c(widths,width);
     heights=c(heights,height);
@@ -343,10 +343,10 @@ read.gnumeric.sheets <- function(file,
                                  colnames.as.sheet=FALSE,
                                  rownames.as.sheet=colnames.as.sheet,
                                  quiet=TRUE,
-                                 LANG='C',                  
-                                 locale='C',                
-                                 import.encoding=NA,        
-                                 field.format='automatic',  
+                                 LANG='C',
+                                 locale='C',
+                                 import.encoding=NA,
+                                 field.format='automatic',
                                  ...  ## passed to read.csv
                                  ){
   si <- read.gnumeric.sheet.info( file );
@@ -382,7 +382,7 @@ read.gnumeric.sheets <- function(file,
 ###   v=as.numeric(as.character(x));
 ###   v+as.Date(epoch);
 ### }
-### 
+###
 ### gnumeric.raw.datetime.as.datetime <- function(x, epoch="1899-12-29 23:59:59", tz='UTC'){
 ###   as.POSIXct(as.numeric(as.character(x))*(60*60*24),  origin=epoch, tz=tz)
 ### }
