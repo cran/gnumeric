@@ -85,13 +85,6 @@ read.gnumeric.sheet <-
 
 
   ### build command
-  SHEET='';
-  if ( !is.na(sheet.name) ){
-    ### bug: Should check for "'" inside sheet.name
-    sheet.name.with.quotes = paste(sep='',  "'", sheet.name, "'" );
-    SHEET=paste(sheet.name.with.quotes, sep='' );
-  }
-
 
   ssconvert = "ssconvert";
   ssconvert.full.path=Sys.which( ssconvert );
@@ -106,18 +99,22 @@ read.gnumeric.sheet <-
     IMPORT.ENCODING = paste(" --import-encoding='", import.encoding, "' ", sep='' );
   }
 
-  ## --export-range needed because I know of no other way to select the
-  ## sheet. This in turn forces to also provide top.left and
-  ## bottom.right, even when we just want 'all the sheet'
-  #  cmd <- paste(ssconvert.full.path,
-  #               " --export-type=Gnumeric_stf:stf_csv ",
-  #               " --export-range=", '"', SHEET , top.left ,":", bottom.right, '" ',
-  #               IMPORT.ENCODING,
-  #               ' "', file, '"',
-  #               " fd://1 ", sep='');
-
-  ## With --export-type=Gnumeric_stf:stf_assistant we can select the
-  ## sheet without using --export-range.
+    ## For --export-type=Gnumeric_stf:stf_csv
+    ##
+    ## --export-range was needed because I knew of no other way to select the
+    ## sheet. This in turn forced to also provide top.left and
+    ## bottom.right, even when we just wanted 'all the sheet'
+    ##  cmd <- paste(ssconvert.full.path,
+    ##               " --export-type=Gnumeric_stf:stf_csv ",
+    ##               " --export-range=", '"', SHEET , top.left ,":", bottom.right, '" ',
+    ##               IMPORT.ENCODING,
+    ##               ' "', file, '"',
+    ##               " fd://1 ", sep='');
+    ##
+    ##
+    ## With --export-type=Gnumeric_stf:stf_assistant we can select the
+    ## sheet without using --export-range.
+    ##
 
   if (is.na(bottom.right) && (is.na(top.left)|| top.left=="A1" ) ){
      range="";
@@ -128,19 +125,29 @@ read.gnumeric.sheet <-
     if ( is.na( bottom.right ) ){
       bottom.right = 'IV65536';
     }
-    range=paste(sep='', " --export-range=", '"', SHEET , "!",top.left ,":", bottom.right, '" ');
+    range=paste(sep='', " --export-range=", '"', top.left ,":", bottom.right, '" ');
   }
 
-  cmd <- paste(ssconvert.full.path,
+  SHEET.arg.for.stf_assistant='';
+  if ( !is.na(sheet.name) ){
+    ### bug: Should check for "'" inside sheet.name
+    sheet.name.with.quotes = paste0( "'", sheet.name, "'" );
+    SHEET.arg.for.stf_assistant=paste0( "sheet=", sheet.name.with.quotes );
+  }
+
+
+  cmd <- paste0(ssconvert.full.path,
                " --export-type=Gnumeric_stf:stf_assistant ",
                ' -O "locale=',locale,
                    ' format=',field.format,
-                   ' separator=, eol=unix sheet=',
-               sheet.name.with.quotes ,'"',
+               ' separator=, eol=unix',
+               ##' sheet=', sheet.name.with.quotes ,
+               SHEET.arg.for.stf_assistant,
+               '"',
                range ,
                IMPORT.ENCODING,
                ' "', file, '"',
-               " fd://1 ", sep='');
+               " fd://1 ");
 
   if ( .Platform$OS.type == "unix" ){
     ## force decimal point in ssconvert output under e.g. hungarian locale
@@ -152,8 +159,6 @@ read.gnumeric.sheet <-
   } else {
     ## redirect stderr of cmd to /dev/null
     if ( .Platform$OS.type == "unix" ){
-      ## the 'grep ,' filter is a temporary workaround for ods
-      ## to ignore diagnostic messages (may be removed in 2010)
       cmd = paste( cmd, " 2> /dev/null " ); ## unix
     } else {
       ## ( .Platform$OS.type == "windows" )
@@ -235,7 +240,8 @@ read.gnumeric.sheet <-
         j = j[1]:j[length(j)]
       }
     }
-    x=x[i,j]
+      ## x=x[i,j] ## < collapses to vector if a single column
+    x=x[i,j, drop=FALSE]
   }
 
   x
