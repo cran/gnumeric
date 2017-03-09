@@ -132,7 +132,7 @@ read.gnumeric.sheet <-
   if ( !is.na(sheet.name) ){
     ### bug: Should check for "'" inside sheet.name
     sheet.name.with.quotes = paste0( "'", sheet.name, "'" );
-    SHEET.arg.for.stf_assistant=paste0( "sheet=", sheet.name.with.quotes );
+    SHEET.arg.for.stf_assistant=paste0( " sheet=", sheet.name.with.quotes );
   }
 
 
