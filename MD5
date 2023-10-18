@@ -1,6 +1,11 @@
-a5b80cf0f8befa6d75674d9704c9ed3c *DESCRIPTION
+8a1c97d5e0172c1f89a08941c998df79 *DESCRIPTION
 fc225e7b086c227d42a2cf0186a9f0c0 *NAMESPACE
 c57a47649d5e653ddecc111def2d8d7a *R/read.gnumeric.R
-f45f3f804c8437dc46fb985860f55c83 *man/read.gnumeric.sheet.Rd
+c1a4d1a5e2914264019855b2efec3657 *build/vignette.rds
+3c9e2d06e8560272e30c98b0c827478b *inst/doc/install-ssconvert.R
+e1e779266bac44dd60e369f948e771e0 *inst/doc/install-ssconvert.Rmd
+05aff2f94ead93b63240622ba5df7381 *inst/doc/install-ssconvert.html
+ab07a44a20151375e90d184420eee03f *man/read.gnumeric.sheet.Rd
 6f7316f7d55d820c0bb6dfa1b1cd9cce *man/read.gnumeric.sheet.info.Rd
 e26f3bd714338e7dc2874291cbe74fea *man/read.gnumeric.sheets.Rd
+e1e779266bac44dd60e369f948e771e0 *vignettes/install-ssconvert.Rmd

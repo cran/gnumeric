@@ -1,0 +1,58 @@
+---
+title: "install-ssconvert"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{install-ssconvert}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The R package `gnumeric` requires an external program,
+  `ssconvert` (normally installed as part of the spreadsheet application `gnumeric`) in `PATH`.
+
+- Gnumeric home page is http://www.gnumeric.org
+
+## Installing ssconvert on MS Windows
+
+The last release of the `gnumeric` application for windows is 1.12.17 from 2014.
+
+
+The page https://www.cyberithub.com/how-to-install-gnumeric-ssconvert-on-windows-10-using-2-methods/ suggests
+
+Either
+
+- Install Chocolatey. See  https://chocolatey.org/install
+- `choco install gnumeric`
+- `setx /M path "%path%;C:\Program Files (x86)\Gnumeric\1.12.17\bin"`
+
+Or
+
+- Download and run the installer: https://github.com/roelvandersteen/chocolatey/blob/master/gnumeric/nupkg/tools/gnumeric-1.12.17-20140610.exe
+- Add the corresponding directory (for example `C:\Program Files (x86)\Gnumeric\1.12.17\bin`) to the environment variable `PATH`
+
+
+
+## Installing ssconvert on OS X
+
+Both https://command-not-found.com/ssconvert and
+ https://formulae.brew.sh/formula/gnumeric suggest
+
+
+- Install `brew`. See https://brew.sh/
+- `brew install gnumeric`
+
+## Installing ssconvert on Linux
+
+Use the systems package manager to install the package `gnumeric` (On
+Fedora: `gnumeric-1`). 
+
+See https://command-not-found.com/ssconvert
+
+

@@ -13,11 +13,7 @@ ssconvert from the gnumeric distribution}
   database) file to a data.frame.
 
   Requires an external program, \samp{ssconvert} (normally installed
-  with gnumeric in \samp{PATH}.
-
-  (Gnumeric home page is \url{http://projects.gnome.org/gnumeric/})
-
-  (Note: last gnumeric release for windows is 1.12.17 from 2014)
+  with gnumeric) in \samp{PATH}. See vignette \samp{install-ssconvert.html} for details.
 
   Calls \samp{ssconvert} to convert the input to CSV.
   \samp{ssconvert} can read several file formats
@@ -190,8 +186,8 @@ ssconvert from the gnumeric distribution}
   from a gnumeric file (but not other formats).
 
 
-  \code{\link[gdata]{read.xls}} for reading Microsoft Excel files
-  (possibly from a \samp{http://} URL)
+  \code{\link[openxlsx]{read.xlsx}}, \code{\link[readxl]{read_xlsx}} and
+  \code{\link[readxl]{read_xls}} for reading Microsoft Excel files
 
   \code{\link{read.DIF}} for reading Data Interchange Format (DIF)
   files.
